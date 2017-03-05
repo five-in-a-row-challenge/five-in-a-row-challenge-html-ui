@@ -1,0 +1,105 @@
+<html>
+<head>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css"/>
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<script
+	src="https://code.jquery.com/jquery-3.1.1.min.js"
+	integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
+	<script type="text/javascript" src="index.js"></script>
+
+</head>
+<body>
+
+	<!-- Login to server -->
+	<div id = "urlc">
+	<div class="ui input">
+		<input type="text" id = "urlfield"  value = 'http://localhost:8080'>
+	</div>
+	<button class="ui button" id = "connect">Connect to Server</button><br/>
+	</div>
+	<!-- Login to server -->
+
+	<!-- Tab menu for Games and Players -->
+	<div class="ui top attached tabular menu">
+		<a class="item active" data-tab="first">Games</a>
+		<a class="item" data-tab="second">Players</a>
+	</div>
+	<!-- Games page-->
+	<div class="ui bottom attached tab segment active" data-tab="first" id="games">
+		<div class="ui list" id = "gamelist">
+		</div>
+	</div>
+	<!-- Games page-->
+
+	<!-- Players page-->
+	<div class="ui bottom attached tab segment" data-tab="second" id="players">
+		<div class="ui list" id = "playerlist">
+		</div>
+	</div>
+	<!-- Players page-->
+	<!-- Tab menu for Games and Players -->
+
+	<!-- Modal page for History -->
+
+	<div class="ui modal" id = "historymodal">
+		<i class="close icon"></i>
+		<div class="header" id = "gamehistoryheader">
+			Game history
+		</div>
+		<div class="content">
+			<div class="ui grid">
+				<div class="six wide column">
+					<div class="ui list" id = "historieslist">
+					</div>
+				</div>
+				<div class="six wide column">
+					<div class="ui card">
+						<div class="image center">
+							<canvas id="myCanvas" width="40" height="40" style="border:5px solid #555555;"></canvas>
+						</div>
+						<div class="content">
+							<a class="header">History</a>
+							<div class="meta">
+								<span class="date">58a622c46e7d3e05a8c6e860</span>
+							</div>
+							<div class="description">
+								<input type = "text" id = "player1" value = 'player1' disabled/><br/>
+							</div>
+							<div class="description">
+								<input type = "text" id = "player2" value = 'player2' disabled/>
+							</dib>
+						</div>
+						<div class="extra content">
+							<a>
+								<i class="user icon"></i>
+								Actual player:
+							</a>
+						</div>
+					</div>
+				</div>
+			</div></div>
+		</div>
+
+		<!-- Modal page for History -->
+
+		<!-- Modal page for Charts -->
+		<div class="ui small modal" id = "chartmodal">
+			<i class="close icon"></i>
+			<div class="header" id = "gamehistoryheader">
+				Game history
+			</div>
+			<div class="content">
+				<div class = "ct-chart"></div>
+			</div>
+		</div>
+
+		<div class="actions">
+			<div class="ui button">OK</div>
+		</div>
+
+		<!-- Modal page for Charts -->
+</body>
+</html>

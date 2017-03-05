@@ -55,12 +55,13 @@ function loadPlayers() {
                         contentType: 'application/json',
                         url: document.getElementById('urlfield').value + '/api/players/',
                         on:"click",
-                        data: JSON.stringify({
-                          "networkAddress": "http://localhost:9999/",
-                          "userName": "test"
-                        }),
-                        onSuccess: function(data) {
-                          alert(data);
+
+                        beforeSend: function(settings) {
+                          settings.data = JSON.stringify({
+                            "networkAddress": $("input[name=networkAddress]").val(),
+                            "userName": $("input[name=userName]").val()
+                          })
+                        return settings;
                         }
                   }
                 )

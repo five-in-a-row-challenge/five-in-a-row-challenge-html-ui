@@ -9,7 +9,13 @@ $(document).ready(function() {
             $('.menu .item')
                 .tab();
         })
-
+        $.fn.api.settings.successTest = function(response) {
+          console.log("successtest");
+          if(response && response.success) {
+            return response.success;
+          }
+          return true;
+        };
 
 
 });
@@ -62,7 +68,25 @@ function loadPlayers() {
                             "userName": $("input[name=userName]").val()
                           })
                         return settings;
-                        }
+                      },
+                      onSuccess: function(response) {
+                        console.log("SUCCESS++++++++");
+     // valid response and response.success = true
+                      },
+                      onResponse: function(response) {
+      // make some adjustments to response
+      console.log("onResponse");
+      return response;
+    },
+                      successTest: function (response) {
+                        console.log(response);
+                        console.log("TEstitn")
+            return  true ;
+        },
+                      onFailure: function(response) {
+                        console.log("response");
+     // valid response and response.success = true
+                      }
                   }
                 )
 
@@ -85,7 +109,7 @@ function loadGames() {
                 }, loadHistories).appendTo(listDiv);
                 $("<i>").addClass("bar chart icon").on("click", {
                     id: data[i].id
-                }, loadHistories).appendTo(listDiv);
+                }, charting).appendTo(listDiv);
                 var content = $("<div>").addClass("content");
                 var description = $("<div>").addClass("description").text(data[i].createdDate + " (" + data[i].gameStatus + ")").appendTo(content);
                 content.appendTo(listDiv);

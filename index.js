@@ -152,12 +152,12 @@ function loadHistories(event) {
     function createHistoryLine(data) {
         var result = data.round + ". " + data.gameNumber + " \> ";
         if (data.winner == null) {
-            result += data.firstPlayer.userName + " vs " + data.secondPlayer.userName;
+            result += data.firstPlayerId + " vs " + data.secondPlayerId;
         } else {
-            if (data.winner.userName === data.firstPlayer.userName) {
-                result += "<b>" + data.firstPlayer.userName + "</b> vs " + data.secondPlayer.userName;
+            if (data.winner === data.firstPlayerId) {
+                result += "<b>" + data.firstPlayerId + "</b> vs " + data.secondPlayerId;
             } else {
-                result += data.firstPlayer.userName + " vs <b> " + data.secondPlayer.userName + "</b>";
+                result += data.firstPlayerId + " vs <b> " + data.secondPlayerId + "</b>";
             }
         }
         return result;

@@ -18,13 +18,11 @@ function charting(event) {
 }
 
 
-function makediagram(code, responseText) {
-    data = responseText;
+function makediagram(code, data) {
     var urlf = document.getElementById('urlfield').value;
     var chartData = [];
     var legends = [];
     for (var i in data) {
-        console.log(data[i]);
         legends[i] = data[i].userName;
         chartData[data[i].userName] = [];
         chartData[data[i].userName][0] = 0;
@@ -38,15 +36,17 @@ function makediagram(code, responseText) {
             'Access-Control-Allow-Origin': '*'
         },
         success: function(data, textStatus, jqXHR) {
-            loadHistories(textStatus, data, chartData, legends);
+            loadGameHistory(textStatus, data, chartData, legends);
         }
   })
 }
-  function loadHistories(code, responseText, chartData, legends) {
-      data = responseText;
+  function loadGameHistory(code, data, chartData, legends) {
       var lastRound = 0;
       var max = 0;
+      console.log("DATAAAAAAAAAA");
       for (var i in data) {
+        console.log(i);
+        console.log(data[i]);
           if (lastRound != data[i].round) {
               lastRound = data[i].round;
               for (var j in chartData) {
@@ -54,13 +54,13 @@ function makediagram(code, responseText) {
               }
           }
           if (data[i].winner === null) {
-              chartData[data[i].firstPlayer.userName][lastRound] += 2;
-              chartData[data[i].secondPlayer.userName][lastRound] += 2;
-              if (chartData[data[i].firstPlayer.userName][lastRound] > max || chartData[data[i].secondPlayer.userName][lastRound] > max) {
-                  max = chartData[data[i].firstPlayer.userName][lastRound] > chartData[data[i].secondPlayer.userName][lastRound] ? chartData[data[i].secondPlayer.userName][lastRound] : chartData[data[i].firstPlayer.userName][lastRound];
+              chartData[data[i].firstPlayerId][lastRound] += 2;
+              chartData[data[i].secondPlayerId][lastRound] += 2;
+              if (chartData[data[i].firstPlayerId][lastRound] > max || chartData[data[i].secondPlayerId][lastRound] > max) {
+                  max = chartData[data[i].firstPlayerId][lastRound] > chartData[data[i].secondPlayerId][lastRound] ? chartData[data[i].secondPlayerId][lastRound] : chartData[data[i].firstPlayerId][lastRound];
               }
           } else {
-              var winner = data[i].winner.userName;
+              var winner = data[i].winner;
               chartData[winner][lastRound] += 5;
               if (chartData[winner][lastRound] > max) {
                   max = chartData[winner][lastRound];

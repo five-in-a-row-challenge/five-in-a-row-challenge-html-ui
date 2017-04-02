@@ -1,33 +1,15 @@
 function charting(event) {
-    id = event.data.id;
-
-    console.log(id);
-    var urlpart = '/api/players/';
-    var urlf = document.getElementById('urlfield').value;
-    $.ajax({
-        url: urlf + urlpart,
-        method: 'GET',
-        cors: true,
-        headers: {
-            'Access-Control-Allow-Origin': '*'
-        },
-        success: function(data, textStatus, jqXHR) {
-            makediagram(textStatus, data);
-        }
-    })
-}
-
-
-function makediagram(code, data) {
-    var urlf = document.getElementById('urlfield').value;
-    var chartData = [];
-    var legends = [];
-    for (var i in data) {
-        legends[i] = data[i].userName;
-        chartData[data[i].userName] = [];
-        chartData[data[i].userName][0] = 0;
+    let id = event.data.id;
+    let players = event.data.players;
+    let urlf = document.getElementById('urlfield').value;
+    let chartData = [];
+    let legends = [];
+    for (let i in players) {
+        legends[i] = players[i];
+        chartData[players[i]] = [];
+        chartData[players[i]][0] = 0;
     }
-    urlpart = '/api/games/';
+    let urlpart = '/api/games/';
     $.ajax({
         url: urlf + urlpart + id + "/histories",
         method: 'GET',
@@ -36,17 +18,16 @@ function makediagram(code, data) {
             'Access-Control-Allow-Origin': '*'
         },
         success: function(data, textStatus, jqXHR) {
-            loadGameHistory(textStatus, data, chartData, legends);
+            loadGameHistory(textStatus, data, chartData, legends, id);
         }
   })
+
 }
-  function loadGameHistory(code, data, chartData, legends) {
+
+  function loadGameHistory(code, data, chartData, legends, id) {
       var lastRound = 0;
       var max = 0;
-      console.log("DATAAAAAAAAAA");
       for (var i in data) {
-        console.log(i);
-        console.log(data[i]);
           if (lastRound != data[i].round) {
               lastRound = data[i].round;
               for (var j in chartData) {
@@ -74,10 +55,10 @@ function makediagram(code, data) {
           chartDataPure[aab] = chartData[aaa];
           aab++;
       }
-      console.log(chartDataPure);
-      var modalx = $('#chartmodal')
+
+      let modalx = $('#chartmodal')
           .modal('show', true);
-      aasdasd = new Chartist.Line('.ct-chart', {
+      new Chartist.Line('.ct-chart', {
           labels: ['Round 0', 'Round 1', 'Round 2'],
           series: chartDataPure
       }, {
@@ -98,8 +79,8 @@ function makediagram(code, data) {
           ]
       });
 
-      $("#gamehistoryheader").empty();
-      $("#gamehistoryheader").append("History of " + id + " game");
+      $("#gamechartheader").empty();
+      $("#gamechartheader").append("History of " + id + " game");
       console.log(chartData);
       $('#chartmodal').modal('refresh');
   }

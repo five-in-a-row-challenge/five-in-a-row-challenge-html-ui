@@ -108,14 +108,15 @@ function loadGames() {
                     id: data[i].id
                 }, loadHistories).appendTo(listDiv);
                 $("<i>").addClass("bar chart icon").on("click", {
-                    id: data[i].id
+                    id: data[i].id,
+                    players: data[i].players
                 }, charting).appendTo(listDiv);
                 var content = $("<div>").addClass("content");
                 var description = $("<div>").addClass("description").text(data[i].createdDate + " (" + data[i].gameStatus + ")").appendTo(content);
                 content.appendTo(listDiv);
                 $("#gamelist").append(listDiv);
             }
-            $("#gamelist").append("<button class=\"ui button urlc\" onclick=\"startGame()\">Start new game</button><br/>");
+            $("#gamelist").append("<button class=\"ui button urlc\" onclick=\"createGame()\">Start new game</button><br/>");
         }
 
     })
@@ -148,7 +149,7 @@ function loadHistories(event) {
                 .modal('show', true)
         }
     })
-
+}
     function createHistoryLine(data) {
         var result = data.round + ". " + data.gameNumber + " \> ";
         if (data.winner == null) {
@@ -171,4 +172,28 @@ function loadHistories(event) {
 
 
 
-}
+    function createGame(){
+            var urlf = document.getElementById('urlfield').value;
+        var urlpart ='/api/games/';
+
+        $.ajax({
+            url:urlf+urlpart,
+            method:'POST',
+            success: function(data) {
+                startGame(data);
+        }
+      });
+    }
+
+
+    function startGame(id){
+            var urlf = document.getElementById('urlfield').value;
+        var urlpart ='/api/games/'+id+'/start';
+        $.ajax({
+            url:urlf+urlpart,
+            method:'POST',
+            success: function(data) {
+              loadGames();
+        }
+      });
+    }

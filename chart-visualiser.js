@@ -56,14 +56,12 @@ function charting(event) {
           aab++;
       }
 
-      let modalx = $('#chartmodal')
-          .modal('show', true);
       new Chartist.Line('.ct-chart', {
           labels: ['Round 0', 'Round 1', 'Round 2'],
           series: chartDataPure
       }, {
           fullWidth: false,
-          height: "300px",
+          height: "500px",
           onlyInteger: true,
           low: 0,
           high: max + 10,
@@ -75,12 +73,12 @@ function charting(event) {
                   stackBars: true,
                   legendNames: legends,
                   position: "bottom"
-              })
+              }),
+              Chartist.plugins.tooltip()
           ]
       });
 
       $("#gamechartheader").empty();
       $("#gamechartheader").append("History of " + id + " game");
       console.log(chartData);
-      $('#chartmodal').modal('refresh');
   }

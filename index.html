@@ -2,6 +2,7 @@
 <head>
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css"/>
+	<link rel="stylesheet" href="chartist-plugin-tooltip.css"/>
 	<link rel="stylesheet" type="text/css" href="index.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css"/>
 	<script
@@ -10,9 +11,11 @@
 	crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.js"></script>
 	<script type="text/javascript" src="index.js"></script>
+
 	<script type="text/javascript" src="chart-visualiser.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/chartist-plugin-legend/0.6.1/chartist-plugin-legend.js"></script>
+	<script type="text/javascript" src="chartist-plugin-tooltip.js"></script>
 </head>
 <body>
 
@@ -24,7 +27,8 @@
 	<button class="ui button" id = "connect">Connect to Server</button><br/>
 	</div>
 	<!-- Login to server -->
-
+	<div class="ui two column grid">
+<div class ="four wide column">
 	<!-- Tab menu for Games and Players -->
 	<div class="ui top attached tabular menu">
 		<a class="item active" data-tab="first">Games</a>
@@ -44,7 +48,11 @@
 	</div>
 	<!-- Players page-->
 	<!-- Tab menu for Games and Players -->
-
+</div>
+<div class ="eight wide column">
+<div class = "ct-chart"></div>
+</div>
+</div>
 	<!-- Modal page for History -->
 
 	<div class="ui modal" id = "historymodal">
@@ -88,20 +96,6 @@
 
 		<!-- Modal page for History -->
 
-		<!-- Modal page for Charts -->
-		<div class="ui small modal" id = "chartmodal">
-			<i class="close icon"></i>
-			<div class="header" id = "gamechartheader">
-				Game history
-			</div>
-			<div class="content">
-				<div class = "ct-chart"></div>
-			</div>
-		</div>
 
-		<div class="actions">
-			<div class="ui button">OK</div>
-		</div>
-		<!-- Modal page for Charts -->
 </body>
 </html>

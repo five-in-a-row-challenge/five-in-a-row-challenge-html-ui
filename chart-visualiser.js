@@ -7,7 +7,7 @@ function charting(event) {
     for (let i in players) {
         legends[i] = players[i];
         chartData[players[i]] = [];
-        chartData[players[i]][0] = 0;
+        chartData[players[i]][0] = {meta:"", value:0};
     }
     let urlpart = '/api/games/';
     $.ajax({
@@ -25,37 +25,42 @@ function charting(event) {
 }
 
   function loadGameHistory(code, data, chartData, legends, id) {
-      var lastRound = 0;
-      var max = 0;
-      for (var i in data) {
+      let lastRound = 0;
+      let max = 0;
+      for (let i in data) {
           if (lastRound != data[i].round) {
               lastRound = data[i].round;
-              for (var j in chartData) {
-                  chartData[j][lastRound] = chartData[j][lastRound - 1];
+              for (let j in chartData) {
+                chartData[j][lastRound] = {value:chartData[j][lastRound - 1].value, meta:"" };
               }
           }
           if (data[i].winner === null) {
-              chartData[data[i].firstPlayerId][lastRound] += 2;
-              chartData[data[i].secondPlayerId][lastRound] += 2;
-              if (chartData[data[i].firstPlayerId][lastRound] > max || chartData[data[i].secondPlayerId][lastRound] > max) {
-                  max = chartData[data[i].firstPlayerId][lastRound] > chartData[data[i].secondPlayerId][lastRound] ? chartData[data[i].secondPlayerId][lastRound] : chartData[data[i].firstPlayerId][lastRound];
-              }
+              chartData[data[i].firstPlayerId][lastRound].value += 2;
+              chartData[data[i].secondPlayerId][lastRound].value += 2;
+
           } else {
               var winner = data[i].winner;
-              chartData[winner][lastRound] += 5;
-              if (chartData[winner][lastRound] > max) {
-                  max = chartData[winner][lastRound];
-              }
+              chartData[winner][lastRound].value += 5;
+
           }
+          if (chartData[data[i].firstPlayerId][lastRound].value > max ) {
+              max = chartData[data[i].firstPlayerId][lastRound].value;
+          }
+          if(chartData[data[i].secondPlayerId][lastRound].value > max){
+            max = chartData[data[i].secondPlayerId][lastRound].value;
+          }
+          chartData[data[i].firstPlayerId][lastRound].meta+=createHistoryLine(data[i])+"<br/>";
+          chartData[data[i].secondPlayerId][lastRound].meta+=createHistoryLine(data[i])+"<br/>";
       }
 
       var chartDataPure = [];
       var aab = 0;
       for (var aaa in chartData) {
+        console.log(chartData[aaa]);
           chartDataPure[aab] = chartData[aaa];
           aab++;
       }
-
+      console.log(max);
       new Chartist.Line('.ct-chart', {
           labels: ['Round 0', 'Round 1', 'Round 2'],
           series: chartDataPure
@@ -65,6 +70,7 @@ function charting(event) {
           onlyInteger: true,
           low: 0,
           high: max + 10,
+
           chartPadding: {
               right: 40
           },
@@ -72,9 +78,9 @@ function charting(event) {
               Chartist.plugins.legend({
                   stackBars: true,
                   legendNames: legends,
-                  position: "bottom"
+                  position: "top"
               }),
-              Chartist.plugins.tooltip()
+              Chartist.plugins.tooltip({  metaIsHTML:true})
           ]
       });
 

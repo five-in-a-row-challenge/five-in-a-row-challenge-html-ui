@@ -3,25 +3,17 @@ $(document).ready(function() {
     $('#connect')
         .click(function(e) {
             loadGames();
-            loadPlayers();
+            loadPlayersToDiv();
             $('#urlc')
                 .transition('fade up');
             $('.menu .item')
                 .tab();
         })
-        $.fn.api.settings.successTest = function(response) {
-          console.log("successtest");
-          if(response && response.success) {
-            return response.success;
-          }
-          return true;
-        };
-
-
 });
 
-function loadPlayers() {
+function loadPlayersToDiv() {
     var playersUrl = document.getElementById('urlfield').value + '/api/players/';
+    $("#playerlist").empty();
     $.ajax({
         url: playersUrl,
         success: function(data) {
@@ -46,7 +38,7 @@ function loadPlayers() {
                 <label>Url</label>
                 <input type="text" name="networkAddress" placeholder="url">
               </div>
-              <button class="ui button" type="submit" id = "submitplayer">Submit</button>
+              <button class="ui button" type="button" id = "submitplayer" onclick = "createPlayer()">Submit</button>
             </form>
                 </div>`;
             $("#playerlist").append(addplayer);
@@ -55,44 +47,28 @@ function loadPlayers() {
                     popup: $('.custom.popup'),
                     on: 'click'
                 });
-                $('#submitplayer')
-                .api({
-                        method:"POST",
-                        contentType: 'application/json',
-                        url: document.getElementById('urlfield').value + '/api/players/',
-                        on:"click",
 
-                        beforeSend: function(settings) {
-                          settings.data = JSON.stringify({
-                            "networkAddress": $("input[name=networkAddress]").val(),
-                            "userName": $("input[name=userName]").val()
-                          })
-                        return settings;
-                      },
-                      onSuccess: function(response) {
-                        console.log("SUCCESS++++++++");
-     // valid response and response.success = true
-                      },
-                      onResponse: function(response) {
-      // make some adjustments to response
-      console.log("onResponse");
-      return response;
-    },
-                      successTest: function (response) {
-                        console.log(response);
-                        console.log("TEstitn")
-            return  true ;
-        },
-                      onFailure: function(response) {
-                        console.log("response");
-     // valid response and response.success = true
-                      }
-                  }
-                )
 
-//     xhr.setRequestHeader ('Content-Type', 'application/json');
         }
     })
+}
+
+function createPlayer(){
+  let playerdata = JSON.stringify({
+      "networkAddress": $("input[name=networkAddress]").val(),
+      "userName": $("input[name=userName]").val()
+    });
+    console.log(playerdata);
+  $.ajax({
+          method:"POST",
+          contentType: 'application/json',
+          url: document.getElementById('urlfield').value + '/api/players/',
+          data: playerdata,
+          success: function(response) {
+            $('#addplayerbutton').popup('hide');
+            loadPlayersToDiv();
+          }
+        })
 }
 
 function loadGames() {
@@ -173,22 +149,47 @@ function loadHistories(event) {
 
 
     function createGame(){
-            var urlf = document.getElementById('urlfield').value;
+        var urlf = document.getElementById('urlfield').value;
         var urlpart ='/api/games/';
 
         $.ajax({
             url:urlf+urlpart,
             method:'POST',
             success: function(data) {
-                startGame(data);
+                loadPlayers(data.id);
         }
       });
     }
 
+    function addPlayers(id, data){
+        var urlf = document.getElementById('urlfield').value;
+        var urlpart =`/api/games/${id}/players`;
+        let allplayers = Array.from(data, (a)=>"\""+a.userName+"\"")
+        let allplayersString = "["+allplayers.join(",")+"]";
+        $.ajax({
+            url:urlf+urlpart,
+            method:'POST',
+            data: allplayersString,
+            contentType:"application/json; charset=utf-8",
+            success: function(data) {
+              startGame(id);
+        }
+      });
+    }
 
-    function startGame(id){
-            var urlf = document.getElementById('urlfield').value;
-        var urlpart ='/api/games/'+id+'/start';
+    function loadPlayers(id) {
+        var playersUrl = document.getElementById('urlfield').value + '/api/players/';
+        $.ajax({
+            url: playersUrl,
+            success: function(data) {
+              addPlayers(id, data);
+            }
+          })
+        }
+
+    function startGame(gameId){
+      var urlf = document.getElementById('urlfield').value;
+        var urlpart =`/api/games/${gameId}/start`;
         $.ajax({
             url:urlf+urlpart,
             method:'POST',

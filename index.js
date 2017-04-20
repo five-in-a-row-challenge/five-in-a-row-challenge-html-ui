@@ -44,7 +44,7 @@ function loadPlayersToDiv() {
             $("#playerlist").append(addplayer);
             $('#addplayerbutton')
                 .popup({
-                    popup: $('.custom.popup'),
+                    popup: $('#addplayerform'),
                     on: 'click'
                 });
 
@@ -58,7 +58,6 @@ function createPlayer(){
       "networkAddress": $("input[name=networkAddress]").val(),
       "userName": $("input[name=userName]").val()
     });
-    console.log(playerdata);
   $.ajax({
           method:"POST",
           contentType: 'application/json',
@@ -92,7 +91,17 @@ function loadGames() {
                 content.appendTo(listDiv);
                 $("#gamelist").append(listDiv);
             }
-            $("#gamelist").append("<button class=\"ui button urlc\" onclick=\"createGame()\">Start new game</button><br/>");
+            $("#gamelist").append("<button class=\"ui button urlc\" onclick=\"createGameWithAllPlayers()\">Start new game with all players</button><br/>");
+            $("#gamelist").append("<button class=\"ui button urlc\" id=\"createGWAP\" onclick=\"createGame()\">Start new game</button><br/>");
+            $("#gamelist").append(`
+            <div class="ui custom popup top left" id="forpopup"> <span id = "createdGameId"></span>
+              <form class="ui form" id = "playerlisttochoose">
+
+              </form>
+              <button class="ui button" type="button" id = "staaaaaaart" onclick = "startWithPlayers()">Submit</button>
+            </div>
+            `);
+            $("#createGWAP").popup({popup : $("#forpopup"), on: "click"})
         }
 
     })
@@ -148,7 +157,7 @@ function loadHistories(event) {
 
 
 
-    function createGame(){
+    function createGameWithAllPlayers(){
         var urlf = document.getElementById('urlfield').value;
         var urlpart ='/api/games/';
 
@@ -156,7 +165,7 @@ function loadHistories(event) {
             url:urlf+urlpart,
             method:'POST',
             success: function(data) {
-                loadPlayers(data.id);
+                loadPlayers(data.id, addPlayers);
         }
       });
     }
@@ -177,12 +186,12 @@ function loadHistories(event) {
       });
     }
 
-    function loadPlayers(id) {
+    function loadPlayers(id, func) {
         var playersUrl = document.getElementById('urlfield').value + '/api/players/';
         $.ajax({
             url: playersUrl,
             success: function(data) {
-              addPlayers(id, data);
+              func(id, data);
             }
           })
         }
@@ -197,4 +206,39 @@ function loadHistories(event) {
               loadGames();
         }
       });
+    }
+
+    function createGame(){
+      var urlf = document.getElementById('urlfield').value;
+      var urlpart ='/api/games/';
+
+      $.ajax({
+          url:urlf+urlpart,
+          method:'POST',
+          success: function(data) {
+              $("#createdGameId").text(data.id);
+              loadPlayers(data.id, loadplayerstopopup);
+          }
+      });
+
+    }
+
+    function loadplayerstopopup(id, data){
+      $("#playerlisttochoose").empty();
+      for(let player of data) {
+        let checkbox =`  <div class="ui checkbox">
+            <input type="checkbox" name="${player.userName}" class = "user">
+            <label>${player.userName}</label>
+          </div>`;
+          $("#playerlisttochoose").append(checkbox);
+      }
+    }
+
+    function startWithPlayers(){
+      let players = [];
+      for (let a of $('.user:checkbox:checked')){
+        let act =  {userName:a.name};
+        players.push(act);
+      }
+      addPlayers($("#createdGameId").text(), players);
     }

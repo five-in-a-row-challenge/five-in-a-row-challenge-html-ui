@@ -56,13 +56,15 @@ function charting(event) {
       var chartDataPure = [];
       var aab = 0;
       for (var aaa in chartData) {
-        console.log(chartData[aaa]);
           chartDataPure[aab] = chartData[aaa];
           aab++;
       }
-      console.log(max);
+      let labels = [];
+      for(let roundnum = 0; roundnum<=lastRound; roundnum++){
+        labels.push(`Round ${roundnum}`);
+      }
       new Chartist.Line('.ct-chart', {
-          labels: ['Round 0', 'Round 1', 'Round 2'],
+          labels,
           series: chartDataPure
       }, {
           fullWidth: false,
@@ -86,5 +88,4 @@ function charting(event) {
 
       $("#gamechartheader").empty();
       $("#gamechartheader").append("History of " + id + " game");
-      console.log(chartData);
   }

@@ -106,10 +106,12 @@ function loadGames() {
 
               </form>
               <button class="ui button" type="button" id = "staaaaaaart" onclick = "startWithPlayers()">Submit</button>
+              <button class="ui negative button" type="button" id = "staaaaaaart" onclick = "deleteGame()">Delete</button>
+              <button class="ui button" type="button" id = "staaaaaaart" onclick = "cancelGamePopup()">Cancel</button>
             </div>
             `);
-            $("#createGWAP").popup({popup : $("#forpopup"), on: "click"})
-            $(".startgameicon").popup({popup : $("#forpopup"), on: "click"})
+            $("#createGWAP").popup({popup : $("#forpopup"), on: "click"});
+            $(".startgameicon").popup({popup : $("#forpopup"), on: "click"});
         }
 
     })
@@ -253,4 +255,13 @@ function loadHistories(event) {
         players.push(act);
       }
       addPlayers($("#createdGameId").text(), players);
+    }
+
+    function deleteGame(){
+      console.log($("#createdGameId").text() + " game is not deleted...");
+    }
+
+    function cancelGamePopup(){
+      $(".startgameicon").popup('hide');
+      loadGames();
     }

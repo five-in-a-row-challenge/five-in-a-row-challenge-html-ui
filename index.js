@@ -79,18 +79,25 @@ function loadGames() {
             for (var i in data) {
                 var listDiv = $("<div>")
                     .addClass('item');
-                $("<i>").addClass("play icon").on("click", {
-                    id: data[i].id
-                }, loadHistories).appendTo(listDiv);
-                $("<i>").addClass("bar chart icon").on("click", {
-                    id: data[i].id,
-                    players: data[i].players
-                }, charting).appendTo(listDiv);
+//                $("<i>").addClass("play icon").on("click", {
+//                    id: data[i].id
+//                }, loadHistories).appendTo(listDiv);
+                if(data[i].gameStatus==='CREATED'){
+                  $("<i>").addClass("link save icon startgameicon").on("click", {
+                      id: data[i].id
+                  }, startFromList).appendTo(listDiv);
+                } else {
+                  $("<i>").addClass("link bar chart icon").on("click", {
+                      id: data[i].id,
+                      players: data[i].players
+                  }, charting).appendTo(listDiv);
+                }
                 var content = $("<div>").addClass("content");
                 var description = $("<div>").addClass("description").text(data[i].createdDate + " (" + data[i].gameStatus + ")").appendTo(content);
                 content.appendTo(listDiv);
                 $("#gamelist").append(listDiv);
             }
+
             $("#gamelist").append("<button class=\"ui button urlc\" onclick=\"createGameWithAllPlayers()\">Start new game with all players</button><br/>");
             $("#gamelist").append("<button class=\"ui button urlc\" id=\"createGWAP\" onclick=\"createGame()\">Start new game</button><br/>");
             $("#gamelist").append(`
@@ -102,6 +109,7 @@ function loadGames() {
             </div>
             `);
             $("#createGWAP").popup({popup : $("#forpopup"), on: "click"})
+            $(".startgameicon").popup({popup : $("#forpopup"), on: "click"})
         }
 
     })
@@ -216,7 +224,6 @@ function loadHistories(event) {
           url:urlf+urlpart,
           method:'POST',
           success: function(data) {
-              $("#createdGameId").text(data.id);
               loadPlayers(data.id, loadplayerstopopup);
           }
       });
@@ -225,6 +232,7 @@ function loadHistories(event) {
 
     function loadplayerstopopup(id, data){
       $("#playerlisttochoose").empty();
+      $("#createdGameId").text(id);
       for(let player of data) {
         let checkbox =`  <div class="ui checkbox">
             <input type="checkbox" name="${player.userName}" class = "user">
@@ -232,6 +240,10 @@ function loadHistories(event) {
           </div>`;
           $("#playerlisttochoose").append(checkbox);
       }
+    }
+
+    function startFromList(event){
+      loadPlayers(event.data.id, loadplayerstopopup);
     }
 
     function startWithPlayers(){
